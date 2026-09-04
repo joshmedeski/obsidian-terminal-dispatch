@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Build output (symlinked into the vault -- never commit)
+build/
+
+# OS
+.DS_Store
+
+# Tooling caches
+.turbo/
+.crush/
