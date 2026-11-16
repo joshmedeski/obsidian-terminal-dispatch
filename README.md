@@ -64,8 +64,9 @@ Turn on a recipe's **Focus terminal** to bring your terminal to the front after 
 command runs. Set the app name (e.g. `WezTerm`) under **Terminal app** at the top of
 the settings tab. This uses `open -a`, so it is macOS only.
 
-Recipes live in the plugin's settings tab. Each one registers a command on load, so
-a new recipe shows up in the palette after you reload the plugin.
+Recipes live in the plugin's settings tab, or in its `data.json` if you'd rather
+edit them by hand. The plugin picks up changes to `data.json` as soon as the file is
+saved, so a recipe added there shows up in the palette without a reload.
 
 ## Hearing back from Claude Code
 

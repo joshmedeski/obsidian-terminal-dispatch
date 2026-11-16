@@ -22,6 +22,16 @@ export default class DispatchPlugin extends Plugin {
     await this.loadSettings();
     this.addSettingTab(new DispatchSettingTab(this.app, this));
     watchClaude(this);
+    this.registerRecipes();
+  }
+
+  async onExternalSettingsChange() {
+    for (const recipe of this.settings.recipes) this.removeCommand(`dispatch:${recipe.id}`);
+    await this.loadSettings();
+    this.registerRecipes();
+  }
+
+  private registerRecipes() {
     for (const recipe of this.settings.recipes) {
       this.addCommand({
         id: `dispatch:${recipe.id}`,

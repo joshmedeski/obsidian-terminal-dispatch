@@ -52,10 +52,9 @@ Done when `jq . data.json` parses and every `id` is unique.
 
 ### 4. Reload
 
-Obsidian holds settings in memory and writes them back whenever the settings tab
-saves, which overwrites your edit. Tell the user to reload right away, before
-touching the settings tab: **Settings → Community plugins**, toggle Terminal
-Dispatch off and on. New recipes appear in the command palette only after this.
+Nothing to do. The plugin reloads `data.json` when it changes on disk and
+re-registers its commands, so new recipes appear in the command palette right
+away.
 
 ## Variables
 
