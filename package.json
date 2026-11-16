@@ -1,5 +1,5 @@
 {
-  "name": "obsidian-dispatch",
+  "name": "obsidian-terminal-dispatch",
   "private": true,
   "scripts": {
     "dev": "vite build --watch --mode development",

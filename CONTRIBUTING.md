@@ -12,8 +12,8 @@ dev loop against your own vault.
 ## 1. Clone and install
 
 ```bash
-git clone https://github.com/joshmedeski/obsidian-dispatch.git
-cd obsidian-dispatch
+git clone https://github.com/joshmedeski/obsidian-terminal-dispatch.git
+cd obsidian-terminal-dispatch
 npm install
 ```
 
