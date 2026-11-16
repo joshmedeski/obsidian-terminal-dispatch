@@ -10,3 +10,6 @@ build
 # Tooling caches
 .turbo/
 .crush/
+
+# Local design notes
+docs/
