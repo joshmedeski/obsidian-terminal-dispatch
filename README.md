@@ -1,9 +1,30 @@
-# Terminal Dispatch
+<p align="center">
+  <img src="docs/banner.jpeg" alt="A note travels through a pneumatic tube from the Obsidian crystal to a terminal" />
+</p>
 
-![A note travels through a pneumatic tube from the Obsidian crystal to a terminal](docs/banner.jpeg)
+<h1 align="center">Terminal Dispatch</h1>
+
+<p align="center">
+  <a href="https://obsidian.md">
+    <img alt="Obsidian plugin" src="https://img.shields.io/badge/Obsidian-plugin-7c3aed?logo=obsidian&logoColor=white" />
+  </a>
+  <img alt="Desktop only" src="https://img.shields.io/badge/desktop-only-1f1f1f" />
+  <a href="https://code.claude.com">
+    <img alt="Works with Claude Code" src="https://img.shields.io/badge/works_with-Claude_Code-ff5a36" />
+  </a>
+</p>
 
 Send the note you are looking at to a terminal command or coding agent, and hear
 back when the agent is done, without leaving Obsidian.
+
+- 📜 **Recipes:** turn any shell command into an Obsidian command palette entry
+- 🧩 **Variables:** fill in the vault path, active file, its frontmatter properties, or text you type when it runs
+- 🏷️ **Frontmatter properties:** point a recipe at the note's own repo or issue with `{prop:name}`
+- 🤖 **Coding agents:** hand the note to Claude Code, Codex, or any CLI agent in a new terminal window
+- 🔔 **Hear back:** a status bar count of running Claude Code sessions, and a Notice when one finishes or needs you
+- 🪟 **Focus terminal:** optionally bring your terminal app to the front after dispatching
+- 🧠 **Agent skill:** teach your coding agent to write recipes for you
+- 🔒 **Private:** no network requests, and it runs only the commands you write
 
 Terminal Dispatch turns **recipes** into Obsidian commands. A recipe is a name plus a shell
 command. The command runs in the vault folder, and these variables are filled in first:
