@@ -2,44 +2,41 @@
 
 Send the note you are looking at to a terminal command, without leaving Obsidian.
 
-Dispatch turns configurable **recipes** into Obsidian commands. Each recipe is a
-command template with placeholders (`{{filePath}}`, `{{input}}`, …); running it
-dispatches the rendered command to your terminal — either directly or through
-[sesh](https://github.com/joshmedeski/sesh) so it lands in the right tmux session.
+Dispatch turns **recipes** into Obsidian commands. A recipe is a name plus a shell
+command. The command runs in the vault folder, and these variables are filled in first:
+
+| Variable | Value |
+|---|---|
+| `{vault_path}` | Absolute path to the vault |
+| `{file}` | Absolute path to the active file, wrapped in single quotes |
+| `{file_name}` | Active file name, with extension |
+| `{file_basename}` | Active file name, without extension |
+| `{input}` | Text you type into a prompt when the command runs |
+
+If the command contains `{input}`, Dispatch asks for it first. The recipe's
+**Input prompt** sets the prompt text.
 
 ## Example
 
-The default recipe, "Send to Claude Code":
+The default recipes. "Send to Claude Code" opens an interactive session:
 
 ```
-command:        @'{{filePath}}' {{input}}
-dispatchMethod: sesh
-seshPath:       ~/c/second-brain
-inputPrompt:    Message for Claude Code
+sesh connect '{vault_path}' --switch --background --command "claude \"@{file} {input}\""
 ```
 
-Running it prompts for a message, then dispatches Claude Code against the current
-note in the `second-brain` session.
+"Send to Claude Code (accept edits, exit)" runs Claude headless, auto-accepts file
+edits, and closes the session when it finishes:
 
-## Recipe options
+```
+sesh connect '{vault_path}' --switch --background --command "claude -p --permission-mode acceptEdits \"@{file} {input}\"; exit"
+```
 
-| Field | Purpose |
-|---|---|
-| `name` | The label shown in the command palette. |
-| `command` | Template to run. Supports `{{filePath}}`, `{{vaultPath}}`, `{{input}}`. |
-| `dispatchMethod` | `sesh` to route through a sesh session, or run directly. |
-| `seshPath` | Which session/directory sesh should target. |
-| `focusTerminal` | Whether to bring the terminal forward after dispatching. |
-| `inputPrompt` | If set, prompts for `{{input}}` before dispatching. |
-
-Recipes are managed in the plugin's settings tab. Each one registers its own command
-on load, so a new recipe shows up in the palette after a reload.
+Recipes live in the plugin's settings tab. Each one registers a command on load, so
+a new recipe shows up in the palette after you reload the plugin.
 
 ## Requirements
 
-Desktop only — it shells out to your local terminal. `sesh` recipes need
-[sesh](https://github.com/joshmedeski/sesh) on your `PATH` (configurable via the
-`seshBinaryPath` setting).
+Desktop only. It shells out to your local machine.
 
 ## Installation
 

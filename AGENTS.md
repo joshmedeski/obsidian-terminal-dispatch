@@ -80,12 +80,11 @@ and publishes a GitHub release with `main.js`, `manifest.json`, `styles.css`, an
 
 ## Architecture
 
-- `src/recipes.ts` — the recipe model and `DEFAULT_SETTINGS`. A recipe is a command
-  template plus how to dispatch it.
-- `src/dispatch.ts` — renders a recipe's template (`{{filePath}}`, `{{vaultPath}}`,
-  `{{input}}`) and shells out, optionally routing through `sesh`.
-- `src/input-modal.ts` — prompts for `{{input}}` when a recipe declares an
-  `inputPrompt`.
+- `src/recipes.ts` — the recipe model and `DEFAULT_SETTINGS`. A recipe is a name, a command
+  template, and an optional input prompt.
+  It also renders templates: `{vault_path}`, `{file}`, `{file_name}`, `{file_basename}`, `{input}`.
+- `src/dispatch.ts` — runs the rendered command with `child_process` in the vault folder.
+- `src/input-modal.ts` — prompts for `{input}` when the command contains it.
 - `src/settings-tab.ts` — CRUD for recipes.
 - `src/main.ts` — registers one Obsidian command per recipe at load time. Adding a
   recipe therefore needs a plugin reload before its command appears.
@@ -95,4 +94,4 @@ and publishes a GitHub release with `main.js`, `manifest.json`, `styles.css`, an
 
 Commands are dispatched with `child_process`. Anything interpolated into a command
 string comes from the user's own settings and their own vault paths, but quote
-placeholders in recipe templates anyway (the default recipe quotes `{{filePath}}`).
+placeholders in recipe templates anyway. `{file}` arrives already wrapped in single quotes.

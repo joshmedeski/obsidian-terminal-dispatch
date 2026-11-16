@@ -2,7 +2,7 @@
   "id": "obsidian-dispatch",
   "name": "Dispatch",
   "version": "1.0.0",
-  "minAppVersion": "1.4.0",
+  "minAppVersion": "1.11.0",
   "description": "Dispatch terminal commands from Obsidian via configurable recipes.",
   "author": "Josh Medeski",
   "authorUrl": "https://www.joshmedeski.com",

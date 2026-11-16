@@ -15,7 +15,7 @@ export class InputModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
 
-    contentEl.createEl('p', { text: this.promptText });
+    this.setTitle(this.promptText);
 
     const inputEl = contentEl.createEl('input', { type: 'text' });
     inputEl.style.width = '100%';
