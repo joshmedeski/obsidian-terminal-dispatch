@@ -9,7 +9,7 @@ import {
   resolveVariables,
   vaultPath,
 } from './recipes';
-import { run } from './dispatch';
+import { focusApp, run } from './dispatch';
 import { InputModal } from './input-modal';
 import { watchClaude } from './claude-state';
 import { DispatchSettingTab } from './settings-tab';
@@ -46,9 +46,18 @@ export default class DispatchPlugin extends Plugin {
 
     try {
       await run(renderCommand(recipe.command, variables), vaultPath(this.app));
+      if (recipe.focusTerminal) await this.focusTerminal();
     } catch (err) {
       new Notice(`Dispatch error: ${err instanceof Error ? err.message : String(err)}`);
     }
+  }
+
+  private async focusTerminal() {
+    if (!this.settings.terminalApp) {
+      new Notice('Set a terminal app in Dispatch settings to focus it.');
+      return;
+    }
+    await focusApp(this.settings.terminalApp);
   }
 
   async loadSettings() {

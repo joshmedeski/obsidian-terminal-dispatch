@@ -36,6 +36,10 @@ Both use `sesh window connect`, which opens a new window in the vault's session
 (starting the session if needed), so they work whether or not the session is
 already running.
 
+Turn on a recipe's **Focus terminal** to bring your terminal to the front after the
+command runs. Set the app name (e.g. `WezTerm`) under **Terminal app** at the top of
+the settings tab. This uses `open -a`, so it is macOS only.
+
 Recipes live in the plugin's settings tab. Each one registers a command on load, so
 a new recipe shows up in the palette after you reload the plugin.
 

@@ -14,6 +14,8 @@ export class DispatchSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
+    new SettingGroup(containerEl).addSetting((s) => this.terminalAppSetting(s));
+
     for (const recipe of this.plugin.settings.recipes) {
       this.renderRecipe(containerEl, recipe);
     }
@@ -35,6 +37,7 @@ export class DispatchSettingTab extends PluginSettingTab {
       .addSetting((s) => this.nameSetting(s, recipe))
       .addSetting((s) => this.commandSetting(s, recipe))
       .addSetting((s) => this.inputPromptSetting(s, recipe))
+      .addSetting((s) => this.focusTerminalSetting(s, recipe))
       .addSetting((s) => this.deleteSetting(s, recipe));
   }
 
@@ -72,6 +75,30 @@ export class DispatchSettingTab extends PluginSettingTab {
       .addText((text) =>
         text.setValue(recipe.inputPrompt ?? '').onChange(async (value) => {
           recipe.inputPrompt = value || undefined;
+          await this.plugin.saveSettings();
+        })
+      );
+  }
+
+  private terminalAppSetting(setting: Setting): void {
+    setting
+      .setName('Terminal app')
+      .setDesc('macOS app name, e.g. WezTerm. Recipes with "Focus terminal" bring it to the front.')
+      .addText((text) =>
+        text.setValue(this.plugin.settings.terminalApp).onChange(async (value) => {
+          this.plugin.settings.terminalApp = value.trim();
+          await this.plugin.saveSettings();
+        })
+      );
+  }
+
+  private focusTerminalSetting(setting: Setting, recipe: Recipe): void {
+    setting
+      .setName('Focus terminal')
+      .setDesc('Bring the terminal app to the front after the command runs')
+      .addToggle((toggle) =>
+        toggle.setValue(recipe.focusTerminal ?? false).onChange(async (value) => {
+          recipe.focusTerminal = value || undefined;
           await this.plugin.saveSettings();
         })
       );

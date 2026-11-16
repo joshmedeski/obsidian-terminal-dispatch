@@ -5,13 +5,16 @@ export interface Recipe {
   name: string;
   command: string;
   inputPrompt?: string;
+  focusTerminal?: boolean;
 }
 
 export interface DispatchSettings {
+  terminalApp: string;
   recipes: Recipe[];
 }
 
 export const DEFAULT_SETTINGS: DispatchSettings = {
+  terminalApp: '',
   recipes: [
     {
       id: 'claude-code',

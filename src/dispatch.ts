@@ -1,4 +1,5 @@
-import { exec } from "child_process";
+import { exec, execFile } from "child_process";
+import { promisify } from "util";
 
 const TIMEOUT = 30_000;
 
@@ -27,4 +28,8 @@ export function run(command: string, cwd?: string): Promise<string> {
       },
     );
   });
+}
+
+export async function focusApp(name: string): Promise<void> {
+  await promisify(execFile)("open", ["-a", name]);
 }
