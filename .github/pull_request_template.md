@@ -20,4 +20,4 @@
 
 ## Release impact
 
-<!-- Does this require a version bump in public/manifest.json and versions.json? -->
+<!-- Does this require a version bump in manifest.json and versions.json? -->

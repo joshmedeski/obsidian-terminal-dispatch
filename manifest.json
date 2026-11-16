@@ -1,6 +1,6 @@
 {
-  "id": "obsidian-dispatch",
-  "name": "Dispatch",
+  "id": "terminal-dispatch",
+  "name": "Terminal Dispatch",
   "version": "1.0.0",
   "minAppVersion": "1.11.0",
   "description": "Send notes to terminal commands and coding agents, and hear back when they finish.",

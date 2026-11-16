@@ -10,8 +10,7 @@ if (!targetVersion || !/^\d+\.\d+\.\d+(-[\w.]+)?$/.test(targetVersion)) {
 	process.exit(1);
 }
 
-// The manifest lives in public/ -- vite-plugin-static-copy copies it into build/.
-const manifestPath = 'public/manifest.json';
+const manifestPath = 'manifest.json';
 const versionsPath = 'versions.json';
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving Dispatch. This guide gets you to a live
+Thanks for your interest in improving Terminal Dispatch. This guide gets you to a live
 dev loop against your own vault.
 
 ## Prerequisites
@@ -24,7 +24,7 @@ Obsidian loads any folder under `.obsidian/plugins/` that contains a valid
 Obsidian's enable-state all agree:
 
 ```bash
-mkdir -p "<path-to-your-vault>/.obsidian/plugins/obsidian-dispatch"
+mkdir -p "<path-to-your-vault>/.obsidian/plugins/terminal-dispatch"
 ```
 
 ## 3. Point `build/` at it
@@ -33,8 +33,8 @@ The build output directory is a symlink into the vault, so every rebuild is live
 
 ```bash
 rm -rf build
-ln -s "<path-to-your-vault>/.obsidian/plugins/obsidian-dispatch" build
-ls -la build   # build -> .../.obsidian/plugins/obsidian-dispatch
+ln -s "<path-to-your-vault>/.obsidian/plugins/terminal-dispatch" build
+ls -la build   # build -> .../.obsidian/plugins/terminal-dispatch
 ```
 
 > The symlink goes **repo → vault**, not the other way around. If `build/` is ever a
@@ -68,7 +68,7 @@ npm run build   # runs npm run check first
 ## 6. Verify in Obsidian
 
 1. Settings → Community Plugins, turn off Restricted Mode.
-2. Enable **Dispatch**.
+2. Enable **Terminal Dispatch**.
 3. Exercise the change, and check the developer console (`Cmd + Option + I`) for errors.
 
 ## Troubleshooting

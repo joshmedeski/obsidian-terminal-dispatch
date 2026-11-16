@@ -29,13 +29,13 @@ jobs:
       - name: Validate tag matches manifest version
         run: |
           TAG_VERSION="${GITHUB_REF_NAME}"
-          MANIFEST_VERSION="$(node -p "require('./public/manifest.json').version")"
+          MANIFEST_VERSION="$(node -p "require('./manifest.json').version")"
           if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
-            echo "::error::Tag version ($TAG_VERSION) does not match public/manifest.json version ($MANIFEST_VERSION)."
+            echo "::error::Tag version ($TAG_VERSION) does not match manifest.json version ($MANIFEST_VERSION)."
             echo "Run 'node version-bump.mjs <version>' before tagging."
             exit 1
           fi
-          echo "Tag $TAG_VERSION matches public/manifest.json."
+          echo "Tag $TAG_VERSION matches manifest.json."
 
       - name: Type-check
         run: npm run check
@@ -65,7 +65,7 @@ jobs:
             ## Installation
 
             Download `main.js`, `manifest.json`, and `styles.css` from the assets below and place them in
-            `<your-vault>/.obsidian/plugins/obsidian-dispatch/`, then enable **Dispatch** in
+            `<your-vault>/.obsidian/plugins/terminal-dispatch/`, then enable **Terminal Dispatch** in
             Settings -> Community Plugins.
 
             See the [README](https://github.com/${{ github.repository }}#installation) for BRAT and manual install instructions.

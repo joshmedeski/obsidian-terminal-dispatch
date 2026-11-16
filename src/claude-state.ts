@@ -10,7 +10,7 @@ interface Session {
   prompt?: string;
 }
 
-const STATE_DIR = join(process.env['XDG_STATE_HOME'] ?? join(homedir(), '.local/state'), 'obsidian-dispatch');
+const STATE_DIR = join(process.env['XDG_STATE_HOME'] ?? join(homedir(), '.local/state'), 'terminal-dispatch');
 const NOTICE_MS = 10_000;
 
 function readSession(file: string): Session | undefined {

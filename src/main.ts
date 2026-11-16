@@ -54,7 +54,7 @@ export default class DispatchPlugin extends Plugin {
 
   private async focusTerminal() {
     if (!this.settings.terminalApp) {
-      new Notice('Set a terminal app in Dispatch settings to focus it.');
+      new Notice('Set a terminal app in Terminal Dispatch settings to focus it.');
       return;
     }
     await focusApp(this.settings.terminalApp);

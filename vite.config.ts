@@ -10,7 +10,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      viteStaticCopy({ targets: [{ src: 'public/*', dest: '.' }] }),
+      viteStaticCopy({ targets: [
+          { src: 'public/*', dest: '.' },
+          { src: 'manifest.json', dest: '.' },
+        ], }),
     ],
     resolve: {
       alias: {

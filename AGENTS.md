@@ -1,6 +1,6 @@
 # Agent Guidelines
 
-Dispatch is a standalone Obsidian plugin. It was extracted from the
+Terminal Dispatch is a standalone Obsidian plugin. It was extracted from the
 `joshmedeski/obsidian-dynamic` monorepo — there is no workspace, no `catalog:`
 protocol, and no shared build package. Everything this repo needs is in this repo.
 
@@ -21,16 +21,17 @@ protocol, and no shared build package. Everything this repo needs is in this rep
 ## Layout
 
 ```
-public/manifest.json   Plugin metadata. The source of truth for `version`.
+manifest.json          Plugin metadata. The source of truth for `version`. Must stay at
+                       the repo root: Obsidian reads it from the default branch.
 public/styles.css      Plugin CSS. Copied verbatim into build/.
 src/main.ts            Plugin entry point (default-exported Plugin subclass).
 vite.config.ts         Self-contained build config. No shared package.
-version-bump.mjs       Bumps public/manifest.json + versions.json together.
+version-bump.mjs       Bumps manifest.json + versions.json together.
 build/                 Symlink into the vault. Generated. Never commit, never edit.
 ```
 
-Anything in `public/` is copied to `build/` on every build by
-`vite-plugin-static-copy`. That is how `manifest.json` and `styles.css` reach the
+Everything in `public/`, plus the root `manifest.json`, is copied to `build/` on every
+build by `vite-plugin-static-copy`. That is how `manifest.json` and `styles.css` reach the
 vault — do not write them into `build/` by hand.
 
 ## The build symlink
@@ -38,7 +39,7 @@ vault — do not write them into `build/` by hand.
 `build/` is a **symlink to the plugin folder inside the vault**:
 
 ```
-build -> /Users/joshmedeski/c/second-brain/.obsidian/plugins/obsidian-dispatch
+build -> /Users/joshmedeski/c/second-brain/.obsidian/plugins/terminal-dispatch
 ```
 
 Vite writes directly into the vault, so a rebuild is immediately live in Obsidian.
@@ -54,10 +55,10 @@ If the symlink is missing (fresh clone), recreate it — see `CONTRIBUTING.md`.
 
 ## Releases
 
-Tag-driven. The tag must match `public/manifest.json`'s `version`, no `v` prefix:
+Tag-driven. The tag must match `manifest.json`'s `version`, no `v` prefix:
 
 ```bash
-node version-bump.mjs 1.1.0        # updates public/manifest.json AND versions.json
+node version-bump.mjs 1.1.0        # updates manifest.json AND versions.json
 npm run build
 git commit -am "chore: bump version to 1.1.0"
 git tag 1.1.0
@@ -70,8 +71,8 @@ and publishes a GitHub release with `main.js`, `manifest.json`, `styles.css`, an
 
 ## Conventions
 
-- Plugin id is `obsidian-dispatch` — it must match the vault folder name and the
-  `id` field in `public/manifest.json`. Obsidian keys enable-state off the manifest
+- Plugin id is `terminal-dispatch` — it must match the vault folder name and the
+  `id` field in `manifest.json`. Obsidian keys enable-state off the manifest
   id, so changing it resets the user's settings.
 - Use `this.app` for Vault/Workspace access; register every listener and interval
   through `this.register*` so unload actually cleans up.
@@ -86,7 +87,7 @@ and publishes a GitHub release with `main.js`, `manifest.json`, `styles.css`, an
 - `src/dispatch.ts` — runs the rendered command with `child_process` in the vault folder.
 - `src/input-modal.ts` — prompts for `{input}` when the command contains it.
 - `src/settings-tab.ts` — CRUD for recipes.
-- `src/claude-state.ts` — watches `~/.local/state/obsidian-dispatch/*.json`, written by the
+- `src/claude-state.ts` — watches `~/.local/state/terminal-dispatch/*.json`, written by the
   vault's `.claude/hooks/dispatch-state.sh`. Shows a running count in the status bar and a
   Notice when a session goes from `running` to `done` or `waiting`.
 - `src/main.ts` — registers one Obsidian command per recipe at load time. Adding a
