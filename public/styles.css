@@ -1,5 +1,16 @@
+.dispatch-recipe .setting-item:has(textarea) {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--size-4-2);
+}
+
+.dispatch-recipe .setting-item:has(textarea) .setting-item-control,
 .dispatch-recipe textarea {
   width: 100%;
+}
+
+.dispatch-recipe textarea {
+  min-height: 6em;
   font-family: var(--font-monospace);
 }
 
