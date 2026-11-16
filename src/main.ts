@@ -11,6 +11,7 @@ import {
 } from './recipes';
 import { run } from './dispatch';
 import { InputModal } from './input-modal';
+import { watchClaude } from './claude-state';
 import { DispatchSettingTab } from './settings-tab';
 
 export default class DispatchPlugin extends Plugin {
@@ -19,6 +20,7 @@ export default class DispatchPlugin extends Plugin {
   async onload() {
     await this.loadSettings();
     this.addSettingTab(new DispatchSettingTab(this.app, this));
+    watchClaude(this);
     for (const recipe of this.settings.recipes) {
       this.addCommand({
         id: `dispatch:${recipe.id}`,

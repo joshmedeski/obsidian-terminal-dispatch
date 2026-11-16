@@ -86,6 +86,9 @@ and publishes a GitHub release with `main.js`, `manifest.json`, `styles.css`, an
 - `src/dispatch.ts` — runs the rendered command with `child_process` in the vault folder.
 - `src/input-modal.ts` — prompts for `{input}` when the command contains it.
 - `src/settings-tab.ts` — CRUD for recipes.
+- `src/claude-state.ts` — watches `~/.local/state/obsidian-dispatch/*.json`, written by the
+  vault's `.claude/hooks/dispatch-state.sh`. Shows a running count in the status bar and a
+  Notice when a session goes from `running` to `done` or `waiting`.
 - `src/main.ts` — registers one Obsidian command per recipe at load time. Adding a
   recipe therefore needs a plugin reload before its command appears.
 
