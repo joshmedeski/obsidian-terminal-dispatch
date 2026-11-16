@@ -16,13 +16,13 @@ export const DEFAULT_SETTINGS: DispatchSettings = {
     {
       id: 'claude-code',
       name: 'Send to Claude Code',
-      command: String.raw`sesh connect '{vault_path}' --switch --background --command "claude \"@{file} {input}\""`,
+      command: String.raw`sesh window connect --target '{vault_path}' --switch --background --command "claude \"@{file} {input}\""`,
       inputPrompt: 'Message for Claude Code',
     },
     {
       id: 'claude-code-accept-edits',
       name: 'Send to Claude Code (accept edits, exit)',
-      command: String.raw`sesh connect '{vault_path}' --switch --background --command "claude -p --permission-mode acceptEdits \"@{file} {input}\"; exit"`,
+      command: String.raw`sesh window connect --target '{vault_path}' --switch --background --command "claude -p --permission-mode acceptEdits \"@{file} {input}\""`,
       inputPrompt: 'Message for Claude Code',
     },
   ],

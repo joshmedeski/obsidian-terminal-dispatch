@@ -21,15 +21,19 @@ If the command contains `{input}`, Dispatch asks for it first. The recipe's
 The default recipes. "Send to Claude Code" opens an interactive session:
 
 ```
-sesh connect '{vault_path}' --switch --background --command "claude \"@{file} {input}\""
+sesh window connect --target '{vault_path}' --switch --background --command "claude \"@{file} {input}\""
 ```
 
 "Send to Claude Code (accept edits, exit)" runs Claude headless, auto-accepts file
-edits, and closes the session when it finishes:
+edits, and closes its window when it finishes:
 
 ```
-sesh connect '{vault_path}' --switch --background --command "claude -p --permission-mode acceptEdits \"@{file} {input}\"; exit"
+sesh window connect --target '{vault_path}' --switch --background --command "claude -p --permission-mode acceptEdits \"@{file} {input}\""
 ```
+
+Both use `sesh window connect`, which opens a new window in the vault's session
+(starting the session if needed), so they work whether or not the session is
+already running.
 
 Recipes live in the plugin's settings tab. Each one registers a command on load, so
 a new recipe shows up in the palette after you reload the plugin.
