@@ -28,6 +28,8 @@ src/main.ts            Plugin entry point (default-exported Plugin subclass).
 vite.config.ts         Self-contained build config. No shared package.
 version-bump.mjs       Bumps manifest.json + versions.json together.
 build/                 Symlink into the vault. Generated. Never commit, never edit.
+skills/                Agent skill for writing recipes. Update it when variables or
+                       recipe fields change.
 ```
 
 Everything in `public/`, plus the root `manifest.json`, is copied to `build/` on every

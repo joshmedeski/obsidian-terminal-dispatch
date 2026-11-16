@@ -106,6 +106,21 @@ Hooks only load when a session starts, so sessions that were already open won't
 show up. If a session crashes before `SessionEnd` runs, its file stays and keeps
 counting as running. Delete it from the state folder to clear it.
 
+## Agent skill
+
+The [`terminal-dispatch-recipes`](skills/terminal-dispatch-recipes/SKILL.md) skill
+teaches a coding agent (Claude Code, Codex, and others that read `SKILL.md`) to write
+recipes for you: where `data.json` lives, how to quote each variable, and worked
+examples. Install it with:
+
+```
+npx skills add joshmedeski/obsidian-terminal-dispatch
+```
+
+Or copy `skills/terminal-dispatch-recipes/` into your agent's skills folder, e.g.
+`~/.claude/skills/`. Then ask your agent for a recipe ("make a Terminal Dispatch
+recipe that opens this note in Neovim").
+
 ## Requirements
 
 Desktop only. It shells out to your local machine.
