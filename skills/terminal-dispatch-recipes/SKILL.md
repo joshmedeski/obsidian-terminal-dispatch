@@ -65,6 +65,7 @@ Dispatch off and on. New recipes appear in the command palette only after this.
 | `{file}` | Absolute path of the active note | Arrives wrapped in single quotes. Use it bare. Inside a double-quoted string those single quotes become literal characters. |
 | `{file_name}` | Active note's file name with extension | Bare. Wrap in single quotes. |
 | `{file_basename}` | Active note's file name without extension | Bare. Wrap in single quotes. |
+| `{prop:name}` | Active note's `name` frontmatter property. Numbers come out as written (`12`), lists join with commas. | Raw. Wrap in single quotes. |
 | `{input}` | Text the user types into a modal when the command runs | Raw. Wrap in double quotes: the user's text then survives apostrophes, while a `"`, `$`, or backtick they type still reaches the shell. |
 
 Any other `{name}` stays in the command as literal text.
@@ -79,6 +80,8 @@ Any other `{name}` stays in the command as literal text.
 - stdout is discarded. On failure, stderr shows in an Obsidian notice.
 - A command that uses `{file}`, `{file_name}`, or `{file_basename}` refuses to run
   without an active note.
+- A command that uses `{prop:name}` refuses to run when the active note has no
+  `name` property, or an empty one.
 - Desktop only. `focusTerminal` uses `open -a`, so macOS only.
 
 ## Examples

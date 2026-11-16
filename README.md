@@ -12,6 +12,7 @@ command. The command runs in the vault folder, and these variables are filled in
 | `{file}` | Absolute path to the active file, wrapped in single quotes |
 | `{file_name}` | Active file name, with extension |
 | `{file_basename}` | Active file name, without extension |
+| `{prop:name}` | The active file's `name` frontmatter property. Lists join with commas. The recipe won't run if the property is missing. |
 | `{input}` | Text you type into a prompt when the command runs |
 
 If the command contains `{input}`, Terminal Dispatch asks for it first. The recipe's

@@ -48,17 +48,31 @@ export function resolveVariables(app: App): Record<string, string> {
     vars['file'] = `'${adapter.getFullPath(activeFile.path)}'`;
     vars['file_name'] = activeFile.name;
     vars['file_basename'] = activeFile.basename;
+    const frontmatter = app.metadataCache.getFileCache(activeFile)?.frontmatter ?? {};
+    for (const [key, value] of Object.entries(frontmatter)) {
+      if (value != null) vars[`prop:${key}`] = formatProp(value);
+    }
   }
 
   return vars;
 }
 
+function formatProp(value: unknown): string {
+  return Array.isArray(value) ? value.join(',') : String(value);
+}
+
 export function renderCommand(template: string, variables: Record<string, string>): string {
-  return template.replace(/\{(\w+)\}/g, (match: string, key: string) => variables[key] ?? match);
+  return template.replace(/\{(\w+|prop:[^{}]+)\}/g, (match: string, key: string) => variables[key] ?? match);
 }
 
 export function needsActiveFile(command: string): boolean {
   return /\{file(_name|_basename)?\}/.test(command);
+}
+
+export function missingProps(command: string, variables: Record<string, string>): string[] {
+  return [...command.matchAll(/\{prop:([^{}]+)\}/g)]
+    .map(([, name]) => name)
+    .filter((name) => !(`prop:${name}` in variables));
 }
 
 export function needsInput(command: string): boolean {
