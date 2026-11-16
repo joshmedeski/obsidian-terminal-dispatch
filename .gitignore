@@ -2,7 +2,7 @@
 node_modules/
 
 # Build output (symlinked into the vault -- never commit)
-build/
+build
 
 # OS
 .DS_Store
