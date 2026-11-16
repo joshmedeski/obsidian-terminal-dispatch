@@ -72,7 +72,7 @@ export class DispatchSettingTab extends PluginSettingTab {
             },
             {
               name: 'Command',
-              desc: 'Runs in the vault folder. Variables: {vault_path}, {file}, {file_name}, {file_basename}, {input}',
+              desc: 'Runs in the vault folder. Variables: {vault_path}, {file}, {file_name}, {file_basename}, {prop:name}, {input}',
               control: { type: 'textarea', key: recipeKey(index, 'command'), rows: 4 },
             },
             {

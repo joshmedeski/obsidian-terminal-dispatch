@@ -1,6 +1,7 @@
 import { Notice, Plugin } from 'obsidian';
 import {
   DEFAULT_SETTINGS,
+  missingProps,
   type DispatchSettings,
   type Recipe,
   needsActiveFile,
@@ -21,6 +22,16 @@ export default class DispatchPlugin extends Plugin {
     await this.loadSettings();
     this.addSettingTab(new DispatchSettingTab(this.app, this));
     watchClaude(this);
+    this.registerRecipes();
+  }
+
+  async onExternalSettingsChange() {
+    for (const recipe of this.settings.recipes) this.removeCommand(`dispatch:${recipe.id}`);
+    await this.loadSettings();
+    this.registerRecipes();
+  }
+
+  private registerRecipes() {
     for (const recipe of this.settings.recipes) {
       this.addCommand({
         id: `dispatch:${recipe.id}`,
@@ -37,6 +48,12 @@ export default class DispatchPlugin extends Plugin {
     }
 
     const variables = resolveVariables(this.app);
+
+    const missing = missingProps(recipe.command, variables);
+    if (missing.length > 0) {
+      new Notice(`Active note is missing properties: ${missing.join(', ')} - cannot dispatch.`);
+      return;
+    }
 
     if (needsInput(recipe.command)) {
       const input = await new InputModal(this.app, recipe.inputPrompt || 'Enter input').prompt();

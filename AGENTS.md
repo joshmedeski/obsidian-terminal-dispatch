@@ -92,8 +92,9 @@ and publishes a GitHub release with `main.js`, `manifest.json`, `styles.css`, an
 - `src/claude-state.ts` — watches `~/.local/state/terminal-dispatch/*.json`, written by the
   vault's `.claude/hooks/dispatch-state.sh`. Shows a running count in the status bar and a
   Notice when a session goes from `running` to `done` or `waiting`.
-- `src/main.ts` — registers one Obsidian command per recipe at load time. Adding a
-  recipe therefore needs a plugin reload before its command appears.
+- `src/main.ts` — registers one Obsidian command per recipe. `onExternalSettingsChange`
+  re-registers them when `data.json` changes on disk, so hand-edited recipes appear
+  without a reload.
 
 `vaultPath` comes from `FileSystemAdapter.getBasePath()`, which is why the plugin is
 `isDesktopOnly: true` — there is no filesystem path (and no child process) on mobile.
