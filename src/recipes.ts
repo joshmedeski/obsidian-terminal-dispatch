@@ -54,7 +54,7 @@ export function resolveVariables(app: App): Record<string, string> {
 }
 
 export function renderCommand(template: string, variables: Record<string, string>): string {
-  return template.replace(/\{(\w+)\}/g, (match, key) => variables[key] ?? match);
+  return template.replace(/\{(\w+)\}/g, (match: string, key: string) => variables[key] ?? match);
 }
 
 export function needsActiveFile(command: string): boolean {

@@ -1,19 +1,8 @@
-.dispatch-command-setting {
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--size-4-2);
-}
-
-.dispatch-command-setting .setting-item-control,
-.dispatch-command-setting textarea {
+.dispatch-recipe textarea {
   width: 100%;
-}
-
-.dispatch-command-setting textarea {
-  min-height: 6em;
   font-family: var(--font-monospace);
 }
 
-.dispatch-add-recipe {
-  margin-top: var(--size-4-4);
+.dispatch-input {
+  width: 100%;
 }

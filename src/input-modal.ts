@@ -17,8 +17,7 @@ export class InputModal extends Modal {
 
     this.setTitle(this.promptText);
 
-    const inputEl = contentEl.createEl('input', { type: 'text' });
-    inputEl.style.width = '100%';
+    const inputEl = contentEl.createEl('input', { type: 'text', cls: 'dispatch-input' });
     inputEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();

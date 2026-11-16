@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import builtins from 'builtin-modules';
+import { builtinModules } from 'node:module';
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
@@ -60,7 +60,8 @@ export default defineConfig(({ mode }) => {
           '@lezer/common',
           '@lezer/highlight',
           '@lezer/lr',
-          ...builtins,
+          ...builtinModules,
+          ...builtinModules.map((m) => `node:${m}`),
         ],
       },
     },

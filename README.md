@@ -121,6 +121,24 @@ Or copy `skills/terminal-dispatch-recipes/` into your agent's skills folder, e.g
 `~/.claude/skills/`. Then ask your agent for a recipe ("make a Terminal Dispatch
 recipe that opens this note in Neovim").
 
+## Permissions and privacy
+
+Terminal Dispatch runs commands on your machine, so it uses capabilities beyond the
+Obsidian vault API:
+
+- **Shell execution.** Recipes run through `child_process` in the vault folder. It only
+  runs commands you write in your own recipes, and only when you trigger them. **Focus
+  terminal** runs `open -a` with the app name you set.
+- **Filesystem access outside the vault.** It reads Claude Code session state from
+  `~/.local/state/terminal-dispatch/` (or `$XDG_STATE_HOME/terminal-dispatch/`), and
+  creates that folder if it is missing. Apart from what your recipes do, it reads and writes
+  nothing else outside the vault.
+- **Environment variables.** It reads `HOME` and `XDG_STATE_HOME` to find that folder and
+  to add common tool locations (Homebrew, `~/.local/bin`, `~/.cargo/bin`, `~/go/bin`)
+  to `PATH`, so your recipes can find installed tools.
+
+It makes no network requests and sends no data anywhere.
+
 ## Requirements
 
 Desktop only. It shells out to your local machine.

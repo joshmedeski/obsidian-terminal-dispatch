@@ -1,6 +1,27 @@
-import { type App, Notice, PluginSettingTab, type Setting, SettingGroup } from 'obsidian';
+import { type App, Notice, PluginSettingTab, type SettingDefinitionItem, type SettingGroupItem } from 'obsidian';
 import type DispatchPlugin from './main';
 import type { Recipe } from './recipes';
+
+type RecipeField = 'name' | 'command' | 'inputPrompt' | 'focusTerminal';
+
+const RELOAD_NOTICE = 'Reload plugin to update commands';
+
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function recipeKey(index: number, field: RecipeField): string {
+  return `recipe:${index}:${field}`;
+}
+
+function parseRecipeKey(key: string): { index: number; field: RecipeField } | undefined {
+  const match = /^recipe:(\d+):(name|command|inputPrompt|focusTerminal)$/.exec(key);
+  if (!match) return undefined;
+  return { index: Number(match[1]), field: match[2] as RecipeField };
+}
 
 export class DispatchSettingTab extends PluginSettingTab {
   plugin: DispatchPlugin;
@@ -10,113 +31,124 @@ export class DispatchSettingTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
-  display(): void {
-    const { containerEl } = this;
-    containerEl.empty();
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      {
+        type: 'group',
+        items: [
+          {
+            name: 'Terminal app',
+            desc: 'macOS app name, e.g. WezTerm. Recipes with "Focus terminal" bring it to the front.',
+            control: { type: 'text', key: 'terminalApp', placeholder: 'WezTerm' },
+          },
+        ],
+      },
+      {
+        type: 'list',
+        heading: 'Recipes',
+        emptyState: 'No recipes yet.',
+        addItem: { name: 'Add recipe', action: () => void this.addRecipe() },
+        onDelete: (index) => void this.deleteRecipe(index),
+        onReorder: (from, to) => void this.moveRecipe(from, to),
+        items: this.plugin.settings.recipes.map((recipe, index) => this.recipePage(recipe, index)),
+      },
+    ];
+  }
 
-    new SettingGroup(containerEl).addSetting((s) => this.terminalAppSetting(s));
-
-    for (const recipe of this.plugin.settings.recipes) {
-      this.renderRecipe(containerEl, recipe);
-    }
-
-    containerEl.createEl('button', { text: 'Add recipe', cls: 'mod-cta dispatch-add-recipe' }).onclick = async () => {
-      this.plugin.settings.recipes.push({
-        id: `recipe-${Date.now()}`,
-        name: 'New Recipe',
-        command: '',
-      });
-      await this.plugin.saveSettings();
-      this.display();
+  private recipePage(recipe: Recipe, index: number): SettingGroupItem {
+    return {
+      type: 'page',
+      name: recipe.name,
+      desc: recipe.command,
+      items: [
+        {
+          type: 'group',
+          cls: 'dispatch-recipe',
+          items: [
+            {
+              name: 'Name',
+              desc: 'Shown in the command palette',
+              control: { type: 'text', key: recipeKey(index, 'name') },
+            },
+            {
+              name: 'Command',
+              desc: 'Runs in the vault folder. Variables: {vault_path}, {file}, {file_name}, {file_basename}, {input}',
+              control: { type: 'textarea', key: recipeKey(index, 'command'), rows: 4 },
+            },
+            {
+              name: 'Input prompt',
+              desc: "Shown when the command contains {input}. Defaults to 'Enter input'.",
+              control: { type: 'text', key: recipeKey(index, 'inputPrompt') },
+            },
+            {
+              name: 'Focus terminal',
+              desc: 'Bring the terminal app to the front after the command runs',
+              control: { type: 'toggle', key: recipeKey(index, 'focusTerminal') },
+            },
+          ],
+        },
+      ],
     };
   }
 
-  private renderRecipe(containerEl: HTMLElement, recipe: Recipe): void {
-    new SettingGroup(containerEl)
-      .setHeading(recipe.name)
-      .addSetting((s) => this.nameSetting(s, recipe))
-      .addSetting((s) => this.commandSetting(s, recipe))
-      .addSetting((s) => this.inputPromptSetting(s, recipe))
-      .addSetting((s) => this.focusTerminalSetting(s, recipe))
-      .addSetting((s) => this.deleteSetting(s, recipe));
+  getControlValue(key: string): unknown {
+    if (key === 'terminalApp') return this.plugin.settings.terminalApp;
+    const parsed = parseRecipeKey(key);
+    const recipe = parsed && this.plugin.settings.recipes[parsed.index];
+    if (!parsed || !recipe) return undefined;
+    if (parsed.field === 'focusTerminal') return recipe.focusTerminal ?? false;
+    return recipe[parsed.field] ?? '';
   }
 
-  private nameSetting(setting: Setting, recipe: Recipe): void {
-    setting.setName('Name').addText((text) =>
-      text.setValue(recipe.name).onChange(async (value) => {
-        recipe.name = value;
-        recipe.id = value
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
-        await this.plugin.saveSettings();
-        new Notice('Reload plugin to update commands');
-      })
-    );
+  async setControlValue(key: string, value: unknown): Promise<void> {
+    if (key === 'terminalApp') {
+      this.plugin.settings.terminalApp = String(value).trim();
+    } else {
+      const parsed = parseRecipeKey(key);
+      const recipe = parsed && this.plugin.settings.recipes[parsed.index];
+      if (!parsed || !recipe) return;
+      this.setRecipeField(recipe, parsed.field, value);
+    }
+    await this.plugin.saveSettings();
   }
 
-  private commandSetting(setting: Setting, recipe: Recipe): void {
-    setting
-      .setClass('dispatch-command-setting')
-      .setName('Command')
-      .setDesc('Runs in the vault folder. Variables: {vault_path}, {file}, {file_name}, {file_basename}, {input}')
-      .addTextArea((text) =>
-        text.setValue(recipe.command).onChange(async (value) => {
-          recipe.command = value;
-          await this.plugin.saveSettings();
-        })
-      );
+  private setRecipeField(recipe: Recipe, field: RecipeField, value: unknown): void {
+    switch (field) {
+      case 'name':
+        recipe.name = String(value);
+        recipe.id = slugify(recipe.name);
+        new Notice(RELOAD_NOTICE);
+        break;
+      case 'command':
+        recipe.command = String(value);
+        break;
+      case 'inputPrompt':
+        recipe.inputPrompt = String(value) || undefined;
+        break;
+      case 'focusTerminal':
+        recipe.focusTerminal = value === true || undefined;
+        break;
+    }
   }
 
-  private inputPromptSetting(setting: Setting, recipe: Recipe): void {
-    setting
-      .setName('Input prompt')
-      .setDesc('Shown in the {input} modal')
-      .addText((text) =>
-        text.setValue(recipe.inputPrompt ?? '').onChange(async (value) => {
-          recipe.inputPrompt = value || undefined;
-          await this.plugin.saveSettings();
-        })
-      );
+  private async addRecipe(): Promise<void> {
+    this.plugin.settings.recipes.push({ id: `recipe-${Date.now()}`, name: 'New Recipe', command: '' });
+    await this.plugin.saveSettings();
+    this.update();
   }
 
-  private terminalAppSetting(setting: Setting): void {
-    setting
-      .setName('Terminal app')
-      .setDesc('macOS app name, e.g. WezTerm. Recipes with "Focus terminal" bring it to the front.')
-      .addText((text) =>
-        text.setValue(this.plugin.settings.terminalApp).onChange(async (value) => {
-          this.plugin.settings.terminalApp = value.trim();
-          await this.plugin.saveSettings();
-        })
-      );
+  private async deleteRecipe(index: number): Promise<void> {
+    this.plugin.settings.recipes.splice(index, 1);
+    await this.plugin.saveSettings();
+    new Notice(RELOAD_NOTICE);
+    this.update();
   }
 
-  private focusTerminalSetting(setting: Setting, recipe: Recipe): void {
-    setting
-      .setName('Focus terminal')
-      .setDesc('Bring the terminal app to the front after the command runs')
-      .addToggle((toggle) =>
-        toggle.setValue(recipe.focusTerminal ?? false).onChange(async (value) => {
-          recipe.focusTerminal = value || undefined;
-          await this.plugin.saveSettings();
-        })
-      );
-  }
-
-  private deleteSetting(setting: Setting, recipe: Recipe): void {
-    setting.addButton((btn) =>
-      btn
-        .setButtonText('Delete')
-        .setWarning()
-        .onClick(async () => {
-          this.plugin.settings.recipes = this.plugin.settings.recipes.filter(
-            (r) => r.id !== recipe.id
-          );
-          await this.plugin.saveSettings();
-          new Notice('Reload plugin to update commands');
-          this.display();
-        })
-    );
+  private async moveRecipe(from: number, to: number): Promise<void> {
+    const [recipe] = this.plugin.settings.recipes.splice(from, 1);
+    if (!recipe) return;
+    this.plugin.settings.recipes.splice(to, 0, recipe);
+    await this.plugin.saveSettings();
+    this.update();
   }
 }
