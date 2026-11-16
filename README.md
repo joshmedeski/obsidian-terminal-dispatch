@@ -1,5 +1,7 @@
 # Terminal Dispatch
 
+![A note travels through a pneumatic tube from the Obsidian crystal to a terminal](docs/banner.jpeg)
+
 Send the note you are looking at to a terminal command or coding agent, and hear
 back when the agent is done, without leaving Obsidian.
 
